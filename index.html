@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+	<title>Document</title>
+	<style>
+		canvas{
+			background-color: #282C73;
+		}
+
+		body{
+			background:black;
+			margin: 0;
+			font-size: 0px;
+		}
+	</style>
+</head>
+<body>
+	<canvas width="1920" height="1080">Your browser doesn't support canvas</canvas>
+	<script src="burst/common.js"></script>
+	<script src="burst/shape.js"></script>
+	<script src="burst/square.js"></script>
+	<script src="burst/circle.js"></script>
+	<script src="burst/plus.js"></script>
+	<script src="burst/line.js"></script>
+	<script src="burst/lighting.js"></script>
+	<script src="burst/triangle.js"></script>
+	<script src="burst/star.js"></script>
+	<script>
+		var oC = document.querySelector('canvas');
+		var ctx = oC.getContext('2d');
+		var doc = document.documentElement;
+
+		var burstArray = [];
+
+		oC.width = doc.clientWidth;
+		oC.height = doc.clientHeight;
+
+		oC.onclick = function({
+			clientX,
+			clientY
+		}){
+			makeBurst(clientX,clientY);
+		}
+
+
+		function makeBurst(x,y){
+
+			[Square,Triangle,Lighting,Circle,Line,Star,Plus].forEach(function(Burst){
+				var amount = rnd(2,8);
+				for( let i = 0; i< amount; i++ ){
+					var burst = new Burst(x,y);
+
+					burstArray.push(burst);
+				}
+			})
+		}
+
+		function draw(){
+			ctx.clearRect(0,0,oC.width,oC.height);
+
+			burstArray.forEach(function(burstObj,index){
+				burstObj.draw();
+
+				if( burstObj.opacity < 0 ){
+					burstArray.splice(index,1);
+				}
+			})
+
+			requestAnimationFrame(draw);
+		}
+
+		draw();
+
+	</script>
+</body>
+</html>
